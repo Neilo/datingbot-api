@@ -1,0 +1,33 @@
+version: '3.3'
+
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+
+  dating-bot-api:
+    image: docker.pkg.github.com/brotherhood228/dating-bot-api/not-stable:feature-create-user
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongo
+      PG_HOST: pg
+      PG_PASS: pass
+      PG_USER: postgres
+      PG_PORT: 5432
+      PG_DATABASE: datingbotapi
+      LOGLVL: debug
+      PORT: :9999
+    restart: always
+    ports:
+      - 9999:9999
+  pg:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=datingbotapi
+    ports:
+      - 5432:5432
